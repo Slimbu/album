@@ -71,22 +71,66 @@ testData = [("Greatest Hits","Queen", 1981, 6300000),
             ("Graceland", "Paul Simon", 1986, 2500000),
             ("Ladies & Gentlemen: The Best of", "George Michael", 1998, 2500000)]
 
---
---
---  Your functional code goes here
---
---
+-- ****************
+-- Functional Code
+-- ****************
 
+-- helper functions
+-- ******************
 
+--displayAlbum :: Album -> String
+--displayAlbum (title, artist, year, sales) = "\nTitle: " ++ title ++ "\nArtist: " ++ artist ++ "\nYear: " ++ (show year) ++ "\nSales: " ++ (show sales) ++ "\n"
+
+displayAlbumString :: Album -> String
+displayAlbumString (title, artist, year, sales) = printf "\n%-50s %-30s %-14d %-14d" title artist year sales
+
+albumYear :: Int -> Int -> Album -> Bool
+albumYear minY maxY (t, a, y, s)
+  | y <= maxY && y >= minY = True
+  | otherwise = False
+
+titleWithTh :: String -> Album -> Bool
+titleWithTh title (t, a, y, s)
+  | title == t = True
+  | otherwise = False
+
+-- Main function
+-- *************
+
+-- i. Display all albums
+albumsToString :: Database -> String
+albumsToString database = concat(map displayAlbumString database)
+
+-- ii. Display top 10 albums in descending order of sales
+
+--iii. Display albums released between given years
+betweenYears :: Int -> Int -> Database -> Database
+betweenYears minYear maxYear database = filter (albumYear minYear maxYear) database
+
+-- iv. Display all ablums who titles being with a given prefix
+displayTitleWithTh :: String -> Database -> String
+displayTitleWithTh title database = albumsToString (filter (titleWithTh title) database)
+
+-- v. Display the total sales figures for a gien artist
+
+-- vi. Display a list of pairs of artist names withh number of albums they have in top50
+
+-- vii. Remove 50th album and add new album into the list
+
+-- viii.
+--
 -- Demo function to test basic functionality (without persistence - i.e.
 -- testData doesn't change and nothing is saved/loaded to/from albums file).
 
---demo :: Int -> IO ()
+demo :: Int -> IO ()
 --demo 1 = putStrLn (albumsToString testData)
---demo 1 = putStrLn (displayAlbumString testData)
---demo 2  = putStrLn (albumsToString (top10 testData))
+demo 1 = putStrLn (albumsToString testData)
+--demo 2 = putStrLn (albumsToString (top10 testData))
+
 --demo 3  = putStrLn ( all albums released between 2000 and 2008 inclusive )
+demo 3 = putStrLn (albumsToString(betweenYears 2000 2006 testData))
 --demo 4  = putStrLn ( all albums with titles beginning with "Th" )
+demo 4 = putStrLn (displayTitleWithTh "Th" testData)
 --demo 5  = putStrLn ( total sales figure for "Queen" )
 --demo 6  = putStrLn ( all artists with the number of times they appear in top 50 )
 --demo 7  = putStrLn ( albums after removing 50th album and adding "Progress"

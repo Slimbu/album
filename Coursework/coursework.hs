@@ -81,13 +81,16 @@ testData = [("Greatest Hits","Queen", 1981, 6300000),
 --displayAlbum :: Album -> String
 --displayAlbum (title, artist, year, sales) = "\nTitle: " ++ title ++ "\nArtist: " ++ artist ++ "\nYear: " ++ (show year) ++ "\nSales: " ++ (show sales) ++ "\n"
 
+-- ************************************************************************************************************
 displayAlbumString :: Album -> String
 displayAlbumString (title, artist, year, sales) = printf "\n%-50s %-30s %-14d %-14d" title artist year sales
+-- ************************************************************************************************************
 
 --topSales (tt0, at0, yr0, ss0) (tt1, at1, yr1, ss1)
 --  | ss0 < ss1 = GT
 --  | otherwise = LT
 
+-- *************************************************
 albumYear :: Int -> Int -> Album -> Bool
 albumYear minY maxY (t, a, y, s)
   | y <= maxY && y >= minY = True
@@ -96,12 +99,15 @@ albumYear minY maxY (t, a, y, s)
 yearSort (t1, a1, y1, s1) (t2, a2, y2, s2)
   | y1 < y2 = GT
   | otherwise = LT
+-- ***************************************************
 
+-- ********************************************
 titleWithTh :: String -> Album -> Bool
 titleWithTh title (t, a, y, s)
   | title == t = True
   | otherwise = False
 
+-- ********************************************
 -- Main function
 -- *************
 

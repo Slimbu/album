@@ -86,9 +86,14 @@ displayAlbumString :: Album -> String
 displayAlbumString (title, artist, year, sales) = printf "\n%-50s %-30s %-14d %-14d" title artist year sales
 -- ************************************************************************************************************
 
---topSales (tt0, at0, yr0, ss0) (tt1, at1, yr1, ss1)
---  | ss0 < ss1 = GT
---  | otherwise = LT
+displayList :: [String] -> String
+displayList [] = ""
+displayList [x] = x ++ "." ++  displayList []
+displayList (x:xs) = x ++ ", " ++ displayList xs
+
+topSales (tt0, at0, yr0, ss0) (tt1, at1, yr1, ss1)
+  | ss0 < ss1 = GT
+  | otherwise = LT
 
 -- *************************************************
 albumYear :: Int -> Int -> Album -> Bool
@@ -116,8 +121,8 @@ albumsToString :: Database -> String
 albumsToString database = concat(map displayAlbumString database)
 
 -- ii. Display top 10 albums in descending order of sales
-albumTopTenSales :: Int -> Database
-albumTopTenSales database = sortby topSales database
+displayTopTen :: Database -> String
+displayTopTen database = albumsToString (take 10 (sortBy topSales database))
 
 --iii. Display albums released between given years
 betweenYears :: Int -> Int -> Database -> Database
@@ -142,7 +147,7 @@ demo :: Int -> IO ()
 --demo 1 = putStrLn (albumsToString testData)
 demo 1 = putStrLn (albumsToString testData)
 --demo 2 = putStrLn (albumsToString (top10 testData))
---demo 2 = putStrLn (albumsToString albumTopTenSales testData)
+demo 2 = putStrLn (displayTopTen testData)
 --demo 3  = putStrLn ( all albums released between 2000 and 2008 inclusive )
 demo 3 = putStrLn (albumsToString(betweenYears 2000 2006 testData))
 --demo 4  = putStrLn ( all albums with titles beginning with "Th" )

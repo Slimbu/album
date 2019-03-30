@@ -6,6 +6,7 @@
 import Data.Char
 import Data.List
 import Text.Printf
+import System.IO
 
 --
 -- Types
@@ -146,8 +147,8 @@ displayTitleWithTh :: String -> Database -> String
 displayTitleWithTh title database = albumsToString (filter (titleWithTh title) database)
 
 -- v. Display the total sales figures for a given artist
-displayArtist :: String -> Database -> String
-displayArtist artist database = albumsToString (filter(displayArtist artist) database)
+displayArtistName :: String -> Database -> String
+displayArtistName artist database = albumsToString (filter(displayQueen artist) database)
 
 -- vi. Display a list of pairs of artist names withh number of albums they have in top50 (each of them appearing once)
 
@@ -173,7 +174,7 @@ demo 3 = putStrLn (albumsToString(betweenYears 2000 2006 testData))
 --demo 4 = putStrLn ( all albums with titles beginning with "Th" )
 --demo 4 = putStrLn (displayTitleWithTh "Th" testData)
 --demo 5  = putStrLn ( total sales figure for "Queen")
-demo 5 = putStrLn (displayArtist "Queen" testData)
+demo 5 = putStrLn (displayArtistName "Queen" testData)
 --demo 51 =
 --demo 6  = putStrLn ( all artists with the number of times they appear in top 50 )
 
@@ -187,3 +188,89 @@ demo 7 = putStrLn (albumsToString(addAlbum("Progress", "Take That", 2010, 270000
 -- Your user interface (and loading/saving) code goes here
 --
 --
+main :: IO ()
+main = do db <- readFile "albums.txt"
+          putStrLn "Enter your name: "
+	  let database = read db :: [Album]
+          userName <- getLine
+	  database <- userInterface (userName, database)
+          writeFile "albums.txt" (show database)
+          putStrLn "\n\nYour changes to the database has been successfull. :)"
+userInterface :: (String, Database) -> IO Database
+userInterface (userName, database) = do let info = (userName, database)
+                                        let message1 = "Press Enter to go back to the main menu: "
+                                        putStrLn "========================"
+                                        putStrLn "  Album Database  "
+                                        putStrLn "========================\n"
+                                        putStrLn "========================================================================================================================================================================================================================================="
+                                        putStrLn "1. - Display albums"
+                                        putStrLn "2. - Display top 10 albums"
+                                        putStrLn "3. - Give all albums that were released between two given years (inclusive)"
+                                        putStrLn "4. - Give all albums whose titles begin with a given prefix"
+                                        putStrLn "5. - Give the total sales figure for a given artist"
+                                        putStrLn "6. - Give a list of pairs of artists’ names with the number of albums they have in the top 50 (each artist should appear exactly once in the result)"
+                                        putStrLn "7. - Remove the 50th (lowest-selling) album and add a given (new) album into the list (which may be placed higher than 50th place depending on its sales figure)"
+                                        putStrLn "8. - Increase the sales figure for one of the albums given its title & artist and the additionalsales, possibly changing the album’s position in the list (if no album with the given details exists, the function should do nothing)"
+                                        putStrLn "================================="
+                                        putStrLn "0. - Exit and update database"
+                                        putStrLn "================================="
+                                        putStrLn "=========================================================================================================================================================================================================================================\n"
+
+                                        input <- getLine
+                                        if input /= "0"
+                                           then case input of
+                                                     "1" -> do info <- selection 1 info
+                                                               putStr message1
+                                                               entry <- getLine
+                                                               userInterface info
+                                                     "2" -> do info <- selection 2 info
+                                                               putStr message1
+                                                               entry <- getLine
+                                                               userInterface info
+                                                     "3" -> do info <- selection 3 info
+                                                               putStr message1
+                                                               entry <- getLine
+                                                               userInterface info
+                                                     --"4" -> do info <- selection 4 info
+                                                    --           entry <- getLine
+                                                    --           userInterface info
+                                                    -- "5" -> do info <- selection 5 info
+                                                    --           entry <- getLine
+                                                    --           userInterface info
+                                                  --   "6" -> do info <- selection 6 info
+                                                  --             entry <- getLine
+                                                --               userInterface info
+                                                --     "7" -> do info <- selection 7 info
+                                              --                 entry <- getLine
+                                                --               userInterface info
+                                                --     "8" -> do info <- selection 8 info
+                                                --               entry <- getLine
+                                                --               userInterface info
+                                                     _ -> do putStrLn "======================== You have entered an invalid number. =========================="
+                                                             userInterface info
+                                        else return (snd info)
+selection 1 (userName, database) = do putStrLn "Display Albums"
+		                                  putStrLn (albumsToString database)
+                                      return (userName, database)
+selection 2 (userName, database) = do putStrLn "================== Display top 10 sales =================="
+                                      putStrLn (displayTopTen database)
+                                      return (userName, database)
+selection 3 (userName, database) = do putStrLn "=============== Give all albums that were released between two given years (inclusive) ======================="
+                                      putStrLn "=================== Enter Start Year ===================="
+                                      year <- getLine
+                                      let firstYear = read year :: Int
+                                      putStrLn "==================== Enter End Year ====================="
+                                      year <- getLine
+                                      let lastYear = read year :: Int
+                                      putStrLn  (albumsToString(betweenYears firstYear lastYear database))
+                                      return (userName, database)
+--selection 4 (userName, database) = do putStrLn "============================ Give all albums whose titles begin with a given prefix ==============================="
+--                                      putStrLn ("Enter title")
+  --                                    title <- getLine
+  --                                    putStrLn (displayTitleWithTh title database)
+  --                                    return (userName, database)
+--selection 5 (userName, database) = do putStrLn "============================ Give the total sales figure for a given artist ======================================="
+--				      putStrLn "Enter artist name "
+--				      artist <- getLine
+--				      putStrLn ("Total sales for artist " ++ artist ++ " : " ++  displayArtist artist database)
+--                                      return (userName, database)

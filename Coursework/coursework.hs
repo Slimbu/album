@@ -71,10 +71,7 @@ testData = [("Greatest Hits","Queen", 1981, 6300000),
             ("Graceland", "Paul Simon", 1986, 2500000),
             ("Ladies & Gentlemen: The Best of", "George Michael", 1998, 2500000)]
 
--- ****************
--- Functional Code
--- ****************
-
+-- ******************
 -- helper functions
 -- ******************
 
@@ -82,8 +79,10 @@ testData = [("Greatest Hits","Queen", 1981, 6300000),
 --displayAlbum (title, artist, year, sales) = "\nTitle: " ++ title ++ "\nArtist: " ++ artist ++ "\nYear: " ++ (show year) ++ "\nSales: " ++ (show sales) ++ "\n"
 
 -- ************************************************************************************************************
+
 displayAlbumString :: Album -> String
 displayAlbumString (title, artist, year, sales) = printf "\n%-50s %-30s %-14d %-14d" title artist year sales
+
 -- ************************************************************************************************************
 
 displayList :: [String] -> String
@@ -91,11 +90,12 @@ displayList [] = ""
 displayList [x] = x ++ "." ++  displayList []
 displayList (x:xs) = x ++ ", " ++ displayList xs
 
-topSales (tt0, at0, yr0, ss0) (tt1, at1, yr1, ss1)
-  | ss0 < ss1 = GT
-  | otherwise = LT
+--topSales (tt0, at0, yr0, ss0) (tt1, at1, yr1, ss1)
+--  | ss0 > ss1 = GT
+--  | otherwise = LT
 
--- *************************************************
+-- ***************************************************
+
 albumYear :: Int -> Int -> Album -> Bool
 albumYear minY maxY (t, a, y, s)
   | y <= maxY && y >= minY = True
@@ -104,17 +104,30 @@ albumYear minY maxY (t, a, y, s)
 yearSort (t1, a1, y1, s1) (t2, a2, y2, s2)
   | y1 < y2 = GT
   | otherwise = LT
+
 -- ***************************************************
 
--- ********************************************
+-- ***************************************************
+
 titleWithTh :: String -> Album -> Bool
 titleWithTh title (t, a, y, s)
   | title == t = True
   | otherwise = False
 
--- ********************************************
+-- ***************************************************
+
+displayQueen :: String -> Album -> Bool
+displayQueen artist (t, a, y, s)
+  | artist == a = True
+  | otherwise = False
+
+--displayArtistFigure (tt0, at0, yr0, ss0) (tt1, at1, yr1, ss1)
+--  | ss0 + ss1 = GT
+--  | otherwise = LT
+
+-- ***************************************************
 -- Main function
--- *************
+-- ****************
 
 -- i. Display all albums
 albumsToString :: Database -> String
@@ -122,23 +135,30 @@ albumsToString database = concat(map displayAlbumString database)
 
 -- ii. Display top 10 albums in descending order of sales
 displayTopTen :: Database -> String
-displayTopTen database = albumsToString (take 10 (sortBy topSales database))
+displayTopTen database = albumsToString (take 10 database)
 
 --iii. Display albums released between given years
 betweenYears :: Int -> Int -> Database -> Database
 betweenYears minYear maxYear database = sortBy yearSort (filter (albumYear minYear maxYear) database)
 
 -- iv. Display all ablums who titles being with a given prefix
---displayTitleWithTh :: String -> Database -> String
---displayTitleWithTh title database = albumsToString (filter (titleWithTh title) database)
+displayTitleWithTh :: String -> Database -> String
+displayTitleWithTh title database = albumsToString (filter (titleWithTh title) database)
 
--- v. Display the total sales figures for a gien artist
+-- v. Display the total sales figures for a given artist
+displayArtist :: String -> Database -> String
+displayArtist artist database = albumsToString (filter(displayArtist artist) database)
 
--- vi. Display a list of pairs of artist names withh number of albums they have in top50
+-- vi. Display a list of pairs of artist names withh number of albums they have in top50 (each of them appearing once)
+
 
 -- vii. Remove 50th album and add new album into the list
+addAlbum :: Album -> Database -> Database
+addAlbum album database = album : database
 
--- viii.
+-- viii. Increase the sales figure for one of the ablums given its title & artist & sales
+
+
 --
 -- Demo function to test basic functionality (without persistence - i.e.
 -- testData doesn't change and nothing is saved/loaded to/from albums file).
@@ -150,12 +170,16 @@ demo 1 = putStrLn (albumsToString testData)
 demo 2 = putStrLn (displayTopTen testData)
 --demo 3  = putStrLn ( all albums released between 2000 and 2008 inclusive )
 demo 3 = putStrLn (albumsToString(betweenYears 2000 2006 testData))
---demo 4  = putStrLn ( all albums with titles beginning with "Th" )
+--demo 4 = putStrLn ( all albums with titles beginning with "Th" )
 --demo 4 = putStrLn (displayTitleWithTh "Th" testData)
---demo 5  = putStrLn ( total sales figure for "Queen" )
+--demo 5  = putStrLn ( total sales figure for "Queen")
+demo 5 = putStrLn (displayArtist "Queen" testData)
+--demo 51 =
 --demo 6  = putStrLn ( all artists with the number of times they appear in top 50 )
+
 --demo 7  = putStrLn ( albums after removing 50th album and adding "Progress"
 --                     by "Take That" from 2010 with 2700000 sales )
+demo 7 = putStrLn (albumsToString(addAlbum("Progress", "Take That", 2010, 2700000) testData))
 --demo 8  = putStrLn ( albums after increasing sales of "21" by "Adele" by 400000 )
 
 --

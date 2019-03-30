@@ -191,9 +191,9 @@ demo 7 = putStrLn (albumsToString(addAlbum("Progress", "Take That", 2010, 270000
 main :: IO ()
 main = do db <- readFile "albums.txt"
           putStrLn "Enter your name: "
-	  let database = read db :: [Album]
+          let database = read db :: [Album]
           userName <- getLine
-	  database <- userInterface (userName, database)
+          database <- userInterface (userName, database)
           writeFile "albums.txt" (show database)
           putStrLn "\n\nYour changes to the database has been successfull. :)"
 userInterface :: (String, Database) -> IO Database
@@ -202,20 +202,20 @@ userInterface (userName, database) = do let info = (userName, database)
                                         putStrLn "========================"
                                         putStrLn "  Album Database  "
                                         putStrLn "========================\n"
-                                        putStrLn "========================================================================================================================================================================================================================================="
-                                        putStrLn "1. - Display albums"
+                                        putStrLn "============================================================================================================"
+                                        putStrLn "1. - Display all albums"
                                         putStrLn "2. - Display top 10 albums"
                                         putStrLn "3. - Give all albums that were released between two given years (inclusive)"
                                         putStrLn "4. - Give all albums whose titles begin with a given prefix"
                                         putStrLn "5. - Give the total sales figure for a given artist"
-                                        putStrLn "6. - Give a list of pairs of artists’ names with the number of albums they have in the top 50 (each artist should appear exactly once in the result)"
-                                        putStrLn "7. - Remove the 50th (lowest-selling) album and add a given (new) album into the list (which may be placed higher than 50th place depending on its sales figure)"
-                                        putStrLn "8. - Increase the sales figure for one of the albums given its title & artist and the additionalsales, possibly changing the album’s position in the list (if no album with the given details exists, the function should do nothing)"
+                                        putStrLn "6. - Give a list of pairs of artists’ names with the number of albums they have in the top 50"
+                                        putStrLn "7. - Remove the 50th (lowest-selling) album and add a given (new) album into the list"
+                                        putStrLn "8. - Increase the sales figure for one of the albums given its title & artist and the additionalsales"
                                         putStrLn "================================="
                                         putStrLn "0. - Exit and update database"
                                         putStrLn "================================="
-                                        putStrLn "=========================================================================================================================================================================================================================================\n"
-
+                                        putStrLn "============================================================================================================"
+                                        putStr "Enter a number to perform an action: "
                                         input <- getLine
                                         if input /= "0"
                                            then case input of
@@ -249,9 +249,9 @@ userInterface (userName, database) = do let info = (userName, database)
                                                      _ -> do putStrLn "======================== You have entered an invalid number. =========================="
                                                              userInterface info
                                         else return (snd info)
-selection 1 (userName, database) = do putStrLn "Display Albums"
-		                                  putStrLn (albumsToString database)
-                                      return (userName, database)
+--selection 1 (userName, database) = do putStrLn "Display Albums"
+--		                                  putStrLn (albumsToString database)
+--                                      return (userName, database)
 selection 2 (userName, database) = do putStrLn "================== Display top 10 sales =================="
                                       putStrLn (displayTopTen database)
                                       return (userName, database)

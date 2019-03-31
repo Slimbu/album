@@ -6,7 +6,6 @@
 import Data.Char
 import Data.List
 import Text.Printf
-import System.IO
 
 --
 -- Types
@@ -212,10 +211,8 @@ userInterface (userName, database) = do let info = (userName, database)
                                         putStrLn "| 7 | Remove the 50th (lowest-selling) album and add a given (new) album into the list                     |"
                                         putStrLn "| 8 | Increase the sales figure for one of the albums given its title & artist and the additionalsales     |"
                                         putStrLn "| 0 |Exit and update database                                                                              |"
-                                        putStrLn "|                                                                                                          |"
                                         putStrLn "|__________________________________________________________________________________________________________|"
                                         putStr   "|Select opetion 0 to 8: "
-                                        putStrLn "|__________________________________________________________________________________________________________|"
                                         input <- getLine
                                         if input /= "0"
                                            then case input of

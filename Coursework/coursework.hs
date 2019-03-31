@@ -201,8 +201,8 @@ userInterface :: (String, Database) -> IO Database
 userInterface (userName, database) = do let info = (userName, database)
                                         let message1 = "Press Enter to go back to the main menu: "
                                         putStrLn "_____________________"
-                                        putStrLn "  Album Database  "
-                                        putStrLn "_____________________"
+                                        putStrLn "|  Album Database    |"
+                                        putStrLn "___________________________________________________________________________________________________________|"
                                         putStrLn "| 1 | Display all albums                                                                                   |"
                                         putStrLn "| 2 | Display top 10 albums                                                                                |"
                                         putStrLn "| 3 | Give all albums that were released between two given years (inclusive)                               |"
@@ -212,9 +212,10 @@ userInterface (userName, database) = do let info = (userName, database)
                                         putStrLn "| 7 | Remove the 50th (lowest-selling) album and add a given (new) album into the list                     |"
                                         putStrLn "| 8 | Increase the sales figure for one of the albums given its title & artist and the additionalsales     |"
                                         putStrLn "| 0 |Exit and update database                                                                              |"
-                                        putStrLn "                                                                                                           |"
-                                        putStrLn "___________________________________________________________________________________________________________|"
-                                        putStr    "Select opetion 0 to 8: "
+                                        putStrLn "|                                                                                                          |"
+                                        putStrLn "|__________________________________________________________________________________________________________|"
+                                        putStr   "|Select opetion 0 to 8: "
+                                        putStrLn "|__________________________________________________________________________________________________________|"
                                         input <- getLine
                                         if input /= "0"
                                            then case input of

@@ -190,79 +190,62 @@ demo 7 = putStrLn (albumsToString(addAlbum("Progress", "Take That", 2010, 270000
 --
 main :: IO ()
 main = do db <- readFile "albums.txt"
-          putStrLn "Enter your name: "
           let database = read db :: [Album]
-          userName <- getLine
-          database <- userInterface (userName, database)
+          database <- userInterface database
           writeFile "albums.txt" (show database)
           putStrLn "\n\nYour changes to the database has been successfull. :)"
-userInterface :: (String, Database) -> IO Database
-userInterface (userName, database) = do let info = (userName, database)
-                                        let message1 = "Press Enter to go back to the main menu: "
-                                        putStrLn "_____________________"
-                                        putStrLn "|  Album Database    |"
-                                        putStrLn "___________________________________________________________________________________________________________|"
-                                        putStrLn "| 1 | Display all albums                                                                                   |"
-                                        putStrLn "| 2 | Display top 10 albums                                                                                |"
-                                        putStrLn "| 3 | Give all albums that were released between two given years (inclusive)                               |"
-                                        putStrLn "| 4 | Give all albums whose titles begin with a given prefix                                               |"
-                                        putStrLn "| 5 | Give the total sales figure for a given artist                                                       |"
-                                        putStrLn "| 6 | Give a list of pairs of artists’ names with the number of albums they have in the top 50             |"
-                                        putStrLn "| 7 | Remove the 50th (lowest-selling) album and add a given (new) album into the list                     |"
-                                        putStrLn "| 8 | Increase the sales figure for one of the albums given its title & artist and the additionalsales     |"
-                                        putStrLn "| 0 |Exit and update database                                                                              |"
-                                        putStrLn "|__________________________________________________________________________________________________________|"
-                                        putStr   "|Select opetion 0 to 8: "
-                                        input <- getLine
-                                        if input /= "0"
-                                           then case input of
-                                                     "1" -> do info <- selection 1 info
-                                                               putStr message1
-                                                               entry <- getLine
-                                                               userInterface info
-                                                     "2" -> do info <- selection 2 info
-                                                               putStr message1
-                                                               entry <- getLine
-                                                               userInterface info
-                                                     "3" -> do info <- selection 3 info
-                                                               putStr message1
-                                                               entry <- getLine
-                                                               userInterface info
-                                                     --"4" -> do info <- selection 4 info
-                                                    --           entry <- getLine
-                                                    --           userInterface info
-                                                    -- "5" -> do info <- selection 5 info
-                                                    --           entry <- getLine
-                                                    --           userInterface info
-                                                  --   "6" -> do info <- selection 6 info
-                                                  --             entry <- getLine
-                                                --               userInterface info
-                                                --     "7" -> do info <- selection 7 info
-                                              --                 entry <- getLine
-                                                --               userInterface info
-                                                --     "8" -> do info <- selection 8 info
-                                                --               entry <- getLine
-                                                --               userInterface info
-                                                     _ -> do putStrLn "======================== You have entered an invalid number. =========================="
-                                                             userInterface info
-                                        else return (snd info)
+userInterface :: Database -> IO Database
+userInterface database = do let info = database
+                            let message1 = "Press Enter to go back to the main menu: "
+                            putStrLn (albumsToString testData)
+                            putStrLn "_____________________"
+                            putStrLn "|  Album Database    |"
+                            putStrLn "___________________________________________________________________________________________________________|"
+                            putStrLn "| 2 | Display top 10 albums                                                                                |"
+                            putStrLn "| 3 | Give all albums that were released between two given years (inclusive)                               |"
+                            putStrLn "| 4 | Give all albums whose titles begin with a given prefix                                               |"
+                            putStrLn "| 5 | Give the total sales figure for a given artist                                                       |"
+                            putStrLn "| 6 | Give a list of pairs of artists’ names with the number of albums they have in the top 50             |"
+                            putStrLn "| 7 | Remove the 50th (lowest-selling) album and add a given (new) album into the list                     |"
+                            putStrLn "| 8 | Increase the sales figure for one of the albums given its title & artist and the additionalsales     |"
+                            putStrLn "| 0 |Exit and update database                                                                              |"
+                            putStrLn "|__________________________________________________________________________________________________________|"
+                            putStr   "|Select opetion 0 to 8: "
+                            input <- getLine
+                            if input /= "0"
+                               then case input of
+                                         "2" -> do info <- selection 2 info
+                                                   putStr message1
+                                                   entry <- getLine
+                                                   userInterface info
+                                         "3" -> do info <- selection 3 info
+                                                   putStr message1
+                                                   entry <- getLine
+                                                   userInterface info
+                                         "4" -> do info <- selection 4 info
+                                                   putStr message1
+                                                   entry <- getLine
+                                                   userInterface info
+                                         _ -> do putStrLn "======================== You have entered an invalid number. =========================="
+                                                 userInterface info
+                            else return (snd info)
 --selection :: Int -> (String, Database) -> IO (String, Database)
 
 --selection 1 (userName, database) = do putStrLn "Display Albums"
 --		                                  putStrLn (albumsToString database)
 --                                    return (userName, database)
-selection 2 (userName, database) = do putStrLn "================== Display top 10 sales =================="
-                                      putStrLn (displayTopTen database)
-                                      return (userName, database)
-selection 3 (userName, database) = do putStrLn "=============== Give all albums that were released between two given years (inclusive) ======================="
-                                      putStrLn "=================== Enter Start Year ===================="
-                                      year <- getLine
-                                      let firstYear = read year :: Int
-                                      putStrLn "==================== Enter End Year ====================="
-                                      year <- getLine
-                                      let lastYear = read year :: Int
-                                      putStrLn  (albumsToString(betweenYears firstYear lastYear database))
-                                      return (userName, database)
+selection 2 database = do putStrLn "================== Display top 10 sales =================="
+                          putStrLn (displayTopTen database)
+                          return database
+selection 3 database = do putStrLn "=============== Give all albums that were released between two given years (inclusive) ======================="
+                          putStrLn "=================== Enter Start Year ===================="
+                          year <- getLine
+                          let firstYear = read year :: Int
+                          putStrLn "==================== Enter End Year ====================="
+                          year <- getLine
+                          let lastYear = read year :: Int
+                          putStrLn  (albumsToString(betweenYears firstYear lastYear database))
+                          return database
 --selection 4 (userName, database) = do putStrLn "============================ Give all albums whose titles begin with a given prefix ==============================="
 --                                      putStrLn ("Enter title")
   --                                    title <- getLine

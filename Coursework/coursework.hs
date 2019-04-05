@@ -74,10 +74,6 @@ testData = [("Greatest Hits","Queen", 1981, 6300000),
 -- ******************
 -- helper functions
 -- ******************
-
---displayAlbum :: Album -> String
---displayAlbum (title, artist, year, sales) = "\nTitle: " ++ title ++ "\nArtist: " ++ artist ++ "\nYear: " ++ (show year) ++ "\nSales: " ++ (show sales) ++ "\n"
-
 -- ************************************************************************************************************
 
 displayAlbumString :: Album -> String
@@ -85,14 +81,10 @@ displayAlbumString (title, artist, year, sales) = printf "\n%-50s %-30s %-14d %-
 
 -- ************************************************************************************************************
 
-displayList :: [String] -> String
-displayList [] = ""
-displayList [x] = x ++ "." ++  displayList []
-displayList (x:xs) = x ++ ", " ++ displayList xs
-
---topSales (tt0, at0, yr0, ss0) (tt1, at1, yr1, ss1)
---  | ss0 > ss1 = GT
---  | otherwise = LT
+--displayList :: [String] -> String
+--displayList [] = ""
+--displayList [x] = x ++ "." ++  displayList []
+--displayList (x:xs) = x ++ ", " ++ displayList xs
 
 -- ***************************************************
 
@@ -106,6 +98,7 @@ yearSort (t1, a1, y1, s1) (t2, a2, y2, s2)
   | otherwise = LT
 
 -- ***************************************************
+
 
 -- ***************************************************
 
@@ -121,9 +114,13 @@ displayQueen artist (t, a, y, s)
   | artist == a = True
   | otherwise = False
 
---displayArtistFigure (tt0, at0, yr0, ss0) (tt1, at1, yr1, ss1)
---  | ss0 + ss1 = GT
---  | otherwise = LT
+--queenSales :: Int -> Int -> Album -> Bool
+--
+
+-- ***************************************************
+
+
+-- ***************************************************
 
 -- ***************************************************
 -- Main function
@@ -147,15 +144,14 @@ displayTitleWithTh title database = albumsToString (filter (titleWithTh title) d
 
 -- v. Display the total sales figures for a given artist
 displayArtistName :: String -> Database -> String
-displayArtistName a database = albumsToString (filter(displayQueen a) database)
-
+displayArtistName artist database = albumsToString (filter(displayQueen artist) database)
 
 -- vi. Display a list of pairs of artist names withh number of albums they have in top50 (each of them appearing once)
 
 
 -- vii. Remove 50th album and add new album into the list
 addAlbum :: Album -> Database -> Database
-addAlbum album database = album : database
+addAlbum album database = album : (take 49 database)
 
 -- viii. Increase the sales figure for one of the ablums given its title & artist & sales
 
@@ -172,87 +168,20 @@ demo 2 = putStrLn (displayTopTen testData)
 --demo 3  = putStrLn ( all albums released between 2000 and 2008 inclusive )
 demo 3 = putStrLn (albumsToString(betweenYears 2000 2006 testData))
 --demo 4 = putStrLn ( all albums with titles beginning with "Th" )
---demo 4 = putStrLn (displayTitleWithTh "Th" testData)
+demo 4 = putStrLn (displayTitleWithTh "Th" testData)
 --demo 5  = putStrLn ( total sales figure for "Queen")
 demo 5 = putStrLn (displayArtistName "Queen" testData)
 --demo 51 =
---demo 6  = putStrLn ( all artists with the number of times they appear in top 50 )
-
+--demo 6  = putStrLn ( all artists with the number of times they appear in top 50 (without repeating))
+--demo 6 = putStrLn (searchArtist "Queen" testData)
 --demo 7  = putStrLn ( albums after removing 50th album and adding "Progress"
 --                     by "Take That" from 2010 with 2700000 sales )
 demo 7 = putStrLn (albumsToString(addAlbum("Progress", "Take That", 2010, 2700000) testData))
 --demo 8  = putStrLn ( albums after increasing sales of "21" by "Adele" by 400000 )
-
+-- Incorrect demo entries
+demo _ = putStrLn "Invalid Demo Requested"
 --
 --
 -- Your user interface (and loading/saving) code goes here
 --
 --
-main :: IO ()
-main = do db <- readFile "albums.txt"
-          let database = read db :: [Album]
-          database <- userInterface database
-          writeFile "albums.txt" (show database)
-          putStrLn "\n\nYour changes to the database has been successfull. :)"
-userInterface :: Database -> IO Database
-userInterface database = do let info = database
-                            let message1 = "Press Enter to go back to the main menu: "
-                            putStrLn (albumsToString testData)
-                            putStrLn "_____________________"
-                            putStrLn "|  Album Database    |"
-                            putStrLn "___________________________________________________________________________________________________________|"
-                            putStrLn "| 2 | Display top 10 albums                                                                                |"
-                            putStrLn "| 3 | Give all albums that were released between two given years (inclusive)                               |"
-                            putStrLn "| 4 | Give all albums whose titles begin with a given prefix                                               |"
-                            putStrLn "| 5 | Give the total sales figure for a given artist                                                       |"
-                            putStrLn "| 6 | Give a list of pairs of artists’ names with the number of albums they have in the top 50             |"
-                            putStrLn "| 7 | Remove the 50th (lowest-selling) album and add a given (new) album into the list                     |"
-                            putStrLn "| 8 | Increase the sales figure for one of the albums given its title & artist and the additionalsales     |"
-                            putStrLn "| 0 |Exit and update database                                                                              |"
-                            putStrLn "|__________________________________________________________________________________________________________|"
-                            putStr   "|Select opetion 0 to 8: "
-                            input <- getLine
-                            if input /= "0"
-                               then case input of
-                                         "2" -> do info <- selection 2 info
-                                                   putStr message1
-                                                   entry <- getLine
-                                                   userInterface info
-                                         "3" -> do info <- selection 3 info
-                                                   putStr message1
-                                                   entry <- getLine
-                                                   userInterface info
-                                         "4" -> do info <- selection 4 info
-                                                   putStr message1
-                                                   entry <- getLine
-                                                   userInterface info
-                                         _ -> do putStrLn "======================== You have entered an invalid number. =========================="
-                                                 userInterface info
-                            else return (snd info)
---selection :: Int -> (String, Database) -> IO (String, Database)
-
---selection 1 (userName, database) = do putStrLn "Display Albums"
---		                                  putStrLn (albumsToString database)
---                                    return (userName, database)
-selection 2 database = do putStrLn "================== Display top 10 sales =================="
-                          putStrLn (displayTopTen database)
-                          return database
-selection 3 database = do putStrLn "=============== Give all albums that were released between two given years (inclusive) ======================="
-                          putStrLn "=================== Enter Start Year ===================="
-                          year <- getLine
-                          let firstYear = read year :: Int
-                          putStrLn "==================== Enter End Year ====================="
-                          year <- getLine
-                          let lastYear = read year :: Int
-                          putStrLn  (albumsToString(betweenYears firstYear lastYear database))
-                          return database
---selection 4 (userName, database) = do putStrLn "============================ Give all albums whose titles begin with a given prefix ==============================="
---                                      putStrLn ("Enter title")
-  --                                    title <- getLine
-  --                                    putStrLn (displayTitleWithTh title database)
-  --                                    return (userName, database)
---selection 5 (userName, database) = do putStrLn "============================ Give the total sales figure for a given artist ======================================="
---				      putStrLn "Enter artist name "
---				      artist <- getLine
---				      putStrLn ("Total sales for artist " ++ artist ++ " : " ++  displayArtist artist database)
---                                      return (userName, database)

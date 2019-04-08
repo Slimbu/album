@@ -81,11 +81,6 @@ displayAlbumString (title, artist, year, sales) = printf "\n%-50s %-30s %-14d %-
 
 -- ************************************************************************************************************
 
---displayList :: [String] -> String
---displayList [] = ""
---displayList [x] = x ++ "." ++  displayList []
---displayList (x:xs) = x ++ ", " ++ displayList xs
-
 -- ***************************************************
 
 albumYear :: Int -> Int -> Album -> Bool
@@ -114,8 +109,8 @@ displayQueen artist (t, a, y, s)
   | artist == a = True
   | otherwise = False
 
---queenSales :: Int -> Int -> Album -> Bool
---
+--queenSales :: Int -> Database -> Database
+--queenSales sales database = filter(displayQueen sales) database
 
 -- ***************************************************
 

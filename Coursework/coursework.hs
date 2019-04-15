@@ -94,7 +94,6 @@ yearSort (t1, a1, y1, s1) (t2, a2, y2, s2)
 
 -- ***************************************************
 
-
 -- ***************************************************
 
 titleWithTh :: String -> Album -> Bool
@@ -109,8 +108,9 @@ displayQueen artist (t, a, y, s)
   | artist == a = True
   | otherwise = False
 
---queenSales :: Int -> Database -> Database
---queenSales sales database = filter(displayQueen sales) database
+--queenSales :: Int -> Album -> Bool
+--queenSales sale1 sale2 (t, a, y, s)
+--  | sale1
 
 -- ***************************************************
 
@@ -163,7 +163,7 @@ demo 2 = putStrLn (displayTopTen testData)
 --demo 3  = putStrLn ( all albums released between 2000 and 2008 inclusive )
 demo 3 = putStrLn (albumsToString(betweenYears 2000 2006 testData))
 --demo 4 = putStrLn ( all albums with titles beginning with "Th" )
-demo 4 = putStrLn (displayTitleWithTh "Th" testData)
+demo 4 = putStrLn (displayTitleWithTh "The" testData)
 --demo 5  = putStrLn ( total sales figure for "Queen")
 demo 5 = putStrLn (displayArtistName "Queen" testData)
 --demo 51 =

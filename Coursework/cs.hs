@@ -1,7 +1,7 @@
 --
 -- MATHFUN
 -- Template for the Haskell assignment program (replace this comment)
--- Add your student number
+-- UP811334
 --
 import Data.Char
 import Data.List
@@ -74,52 +74,46 @@ testData = [("Greatest Hits","Queen", 1981, 6300000),
 -- ******************
 -- helper functions
 -- ******************
--- ************************************************************************************************************
 
 displayAlbumString :: Album -> String
 displayAlbumString (title, artist, year, sales) = printf "\n%-50s %-30s %-14d %-14d" title artist year sales
 
--- ************************************************************************************************************
-
--- ***************************************************
 
 albumYear :: Int -> Int -> Album -> Bool
 albumYear minY maxY (t, a, y, s)
   | y <= maxY && y >= minY = True
   | otherwise = False
 
+titleWithTh :: String -> Album -> Bool
+titleWithTh title (t, a, y, s)
+  | title <= t  = True
+  | otherwise = False
+
+displayArtist :: String -> Album -> Bool
+displayArtist artist (t, a, y, s)
+  | artist == a  = True
+  | otherwise = False
+
+--getTotalSales :: Int -> Albunm -> Bool
+--getTotalSales sales (t, a, y, s)
+--  | sales
+
+--displayArtistString :: String -> Album -> String
+--displayArtistString dupArtist (title, artist, year, sales) = printf "\n%-30s %-30s" title
+
+
+
 yearSort (t1, a1, y1, s1) (t2, a2, y2, s2)
   | y1 < y2 = GT
   | otherwise = LT
 
--- ***************************************************
-
--- ***************************************************
-
-titleWithTh :: String -> Album -> Bool
-titleWithTh title (t, a, y, s)
-  | title <= t || title /= t = True
-  | otherwise = False
-
--- ***************************************************
-
-displayQueen :: String -> Album -> Bool
-displayQueen artist (t, a, y, s)
-  | artist == a = True
-  | otherwise = False
-
---queenSales :: Int -> Album -> Bool
---queenSales sale1 sale2 (t, a, y, s)
---  | sale1
-
--- ***************************************************
-
-
--- ***************************************************
+saleSort (t1, a1, y1, s1) (t2, a2, y2, s2)
+  | s1 < s2 = GT
+  | otherwise = LT
 
 -- ***************************************************
 -- Main function
--- ****************
+-- ***************************************************
 
 -- i. Display all albums
 albumsToString :: Database -> String
@@ -139,17 +133,17 @@ displayTitleWithTh title database = albumsToString (filter (titleWithTh title) d
 
 -- v. Display the total sales figures for a given artist
 displayArtistName :: String -> Database -> String
-displayArtistName artist database = albumsToString (filter(displayQueen artist) database)
+displayArtistName artist database = albumsToString (filter(displayArtist artist) database)
 
 -- vi. Display a list of pairs of artist names withh number of albums they have in top50 (each of them appearing once)
-
+--displayAritstList
 
 -- vii. Remove 50th album and add new album into the list
 addAlbum :: Album -> Database -> Database
-addAlbum album database = album : (take 49 database)
+addAlbum album database = sortBy saleSort (album : (take 49 database))
 
 -- viii. Increase the sales figure for one of the ablums given its title & artist & sales
-
+--displayTotalSales ::
 
 --
 -- Demo function to test basic functionality (without persistence - i.e.
@@ -166,13 +160,13 @@ demo 3 = putStrLn (albumsToString(betweenYears 2000 2006 testData))
 demo 4 = putStrLn (displayTitleWithTh "Th" testData)
 --demo 5  = putStrLn ( total sales figure for "Queen")
 demo 5 = putStrLn (displayArtistName "Queen" testData)
---demo 51 =
 --demo 6  = putStrLn ( all artists with the number of times they appear in top 50 (without repeating))
---demo 6 = putStrLn (searchArtist "Queen" testData)
+--demo 6 = putStrLn
 --demo 7  = putStrLn ( albums after removing 50th album and adding "Progress"
 --                     by "Take That" from 2010 with 2700000 sales )
 demo 7 = putStrLn (albumsToString(addAlbum("Progress", "Take That", 2010, 2700000) testData))
 --demo 8  = putStrLn ( albums after increasing sales of "21" by "Adele" by 400000 )
+demo 8 = putStrLn (albumsToString(addAlbum("21", "Adele", 2011 , 400000) testData))
 -- Incorrect demo entries
 demo _ = putStrLn "Invalid Demo Requested"
 --

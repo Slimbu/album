@@ -189,9 +189,9 @@ demo _ = putStrLn "Invalid Demo Requested"
 main :: IO ()
 main = do db <- readFile "albums.txt"
           putStrLn "Enter your name: "
-	  let database=read db:: [Album]
+          let database = read db :: [Album]
           userName <- getLine
-	  database <- userInterface (userName, database)
+	  database <- userInterface (userName,database)
           writeFile "films.txt" (show database)
           putStrLn "\n\nYour changes to the database has been successfull. :)"
 userInterface :: (String, Database) -> IO Database
@@ -240,7 +240,7 @@ selection 1 (userName, database) = do putStrLn "======================"
                                       putStrLn "======================"
                                       putStrLn (albumsToString database)
                                       return (userName, database)
-                                      
+
 selection 2 (userName, database) = do putStrLn "=========================="
                                       putStrLn "  Display top 10 albums.  "
                                       putStrLn "=========================="

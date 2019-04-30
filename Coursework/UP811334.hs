@@ -102,16 +102,6 @@ getSalesOfArtist (title, artist, year, sales) = (fromIntegral(sales))
 getSales :: Database -> Int
 getSales database = sum(map getSalesOfArtist database)
 
-salesIncrease :: Album -> Bool
-salesIncrease (t, a, y, s)
-  | t == "21" && y == 2011 && s == 5110000 = True
-  | otherwise = False
-
-getArtist :: Album -> String
-getArtist (title, artist, year, sales) = artist
-
-getArtistList :: Database -> [String]
-getArtistList database = map getArtist database
 
 yearSort (t1, a1, y1, s1) (t2, a2, y2, s2)
   | y1 < y2 = GT
@@ -155,7 +145,7 @@ addAlbum album database = album : (take 49 database)
 
 -- viii. Increase the sales figure for one of the ablums given its title & artist & sales
 increaseSales :: Album -> Database -> Database
-increaseSales album database = (sortBy saleSort (album : database))
+increaseSales album database = sortBy saleSort (album : database)
 
 --
 -- Demo function to test basic functionality (without persistence - i.e.
@@ -178,7 +168,7 @@ demo 5 = putStrLn ("Total Sales for Queen is : " ++ displayArtistName "Queen" te
 --                     by "Take That" from 2010 with 2700000 sales )
 demo 7 = putStrLn (displayAlbumsWithStrings(addAlbum("Progress", "Take That", 2010, 2700000) testData))
 --demo 8  = putStrLn ( albums after increasing sales of "21" by "Adele" by 400000 )
-demo 8 = putStrLn (displayAlbumsWithStrings(addAlbum("21", "Adele", 2011 , 5150000) testData))
+demo 8 = putStrLn (albumsToString(addAlbum("21", "Adele", 2011 , 400000) testData))
 -- Incorrect demo entries
 demo _ = putStrLn "Invalid Demo Requested"
 --

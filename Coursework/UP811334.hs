@@ -104,8 +104,8 @@ getSales database = sum(map getSalesOfArtist database)
 
 salesIncrease :: Album -> Bool
 salesIncrease (t, a, y, s)
-  | t == "21" && s == 5110000 = False
-  | otherwise = True
+  | t == "21" && y == 2011 && s == 5110000 = True
+  | otherwise = False
 
 getArtist :: Album -> String
 getArtist (title, artist, year, sales) = artist
@@ -155,7 +155,7 @@ addAlbum album database = album : (take 49 database)
 
 -- viii. Increase the sales figure for one of the ablums given its title & artist & sales
 increaseSales :: Album -> Database -> Database
-increaseSales album database = sortBy saleSort (filter salesIncrease (album : database))
+increaseSales album database = (sortBy saleSort (album : database))
 
 --
 -- Demo function to test basic functionality (without persistence - i.e.
@@ -232,6 +232,10 @@ userInterface (userName, database) = do let info = (userName, database)
                                                                putStr message1
                                                                entry <- getLine
                                                                userInterface info
+                                                     "5" -> do info <- selection 5 info
+                                                               putStr message1
+                                                               entry <- getLine
+                                                               userInterface info
                                                      _ -> do putStrLn "You have entered an invalid number."
                                                              userInterface info
                                         else return (snd info)
@@ -249,9 +253,9 @@ selection 2 (userName, database) = do putStrLn "=========================="
                                       putStrLn (displayTopTen database)
                                       return (userName, database)
 
-selection 3 (userName, database) = do putStrLn "======================"
+selection 3 (userName, database) = do putStrLn "========================================"
                                       putStrLn "Albums released between two given years"
-                                      putStrLn "======================"
+                                      putStrLn "========================================"
                                       putStrLn "Enter Start Year "
                                       year <- getLine
                                       let firstYear = read year :: Int
@@ -261,10 +265,18 @@ selection 3 (userName, database) = do putStrLn "======================"
                                       putStrLn  (albumsToString(betweenYears firstYear lastYear database))
                                       return (userName, database)
 
-selection 4 (userName, database) = do putStrLn "========================"
-                                      putStrLn " All albums by a titles "
-                                      putStrLn "========================"
+selection 4 (userName, database) = do putStrLn "================================ "
+                                      putStrLn " Display titles with beginning "
+                                      putStrLn "================================ "
                                       putStrLn "Enter title "
                                       title <- getLine
                                       putStrLn (displayTitleWithTh title database)
+                                      return (userName, database)
+
+selection 5 (userName, database) = do putStrLn "=============================== "
+                                      putStrLn " Display total sales by artist "
+                                      putStrLn "=============================== "
+                                      putStrLn "Enter artist name "
+                                      title <- getLine
+                                      putStrLn (displayArtistName title database)
                                       return (userName, database)

@@ -192,7 +192,7 @@ main = do db <- readFile "albums.txt"
           let database = read db :: [Album]
           userName <- getLine
 	  database <- userInterface (userName,database)
-          writeFile "films.txt" (show database)
+          writeFile "albums.txt" (show database)
           putStrLn "\n\nYour changes to the database has been successfull. :)"
 userInterface :: (String, Database) -> IO Database
 userInterface (userName, database) = do let info = (userName, database)

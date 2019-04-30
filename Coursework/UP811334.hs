@@ -155,7 +155,7 @@ addAlbum album database = album : (take 49 database)
 
 -- viii. Increase the sales figure for one of the ablums given its title & artist & sales
 increaseSales :: Album -> Database -> Database
-increaseSales album database = (sortBy saleSort (filter salesIncrease (album : database)))
+increaseSales album database = sortBy saleSort (filter salesIncrease (album : database))
 
 --
 -- Demo function to test basic functionality (without persistence - i.e.
